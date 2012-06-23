@@ -26,8 +26,10 @@ class BikesVillo extends AReader{
     }
 
     public function read(){
-	
-        return "A resource for bikes in a certain area";
+        $data = TDT::HttpRequest("http://www.mobielbrussel.irisnet.be/villo/json/");
+        $result = json_decode($data->data);
+        //todo: convert to wished format
+        return $result;
     }
 
     public static function getDoc(){
