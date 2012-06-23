@@ -1,4 +1,4 @@
 BikesResource
-=============
+==============
 
-All bikes availability in Belgium
+A The DataTank resource for bikes from several Belgian systems
