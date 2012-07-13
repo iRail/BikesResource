@@ -20,7 +20,10 @@ class BikesVillo extends AReader{
     }
 
     public static function getParameters(){
-        return array("lat", "long");
+        return array(   "lat" => "Latitude" 
+                        ,"long" => "Longitude"
+                        ,"offset" => "Offset"
+                        ,"rowcount" => "Rowcount");
     }
 
     public static function getRequiredParameters(){
