@@ -7,15 +7,20 @@
  * @author Pieter Colpaert <pieter aŧ iRail.be>
  */
 
+include_once('gpoint.php');
  
 class BikesVillo extends AReader{
 
     public function __construct($package, $resource, $RESTparameters) {
         parent::__construct($package, $resource, $RESTparameters);	
+        $this->lat = null;
+        $this->long = null;
+        $this->offset = 0;
+        $this->rowcount = 1024;
     }
 
     public static function getParameters(){
-        return array();
+        return array("lat", "long");
     }
 
     public static function getRequiredParameters(){
@@ -23,13 +28,58 @@ class BikesVillo extends AReader{
     }
 
     public function setParameter($key,$val){
+        if($key == "lat") {
+            $this->lat = $val;
+        } else if ($key == "long") {
+            $this->long = $val;
+        } else if ($key == "offset") {
+            $this->offset = $val;
+        } else if ($key == "rowcount") {
+            $this->rowcount = $val;
+        }
     }
 
     public function read(){
         $data = TDT::HttpRequest("http://www.mobielbrussel.irisnet.be/villo/json/");
-        $result = json_decode($data->data);
+        $decoded = json_decode($data->data);
         //todo: convert to wished format
-        return $result;
+        
+        $result = array();
+        $gpoint = new gPoint();
+        
+        foreach($decoded->features as $feature) {
+            $station = new Object();
+            $x = $feature->geometry->coordinates[0];
+            $y = $feature->geometry->coordinates[1];
+            $station->name = $feature->properties->NAME;
+            $station->freebikes = $feature->properties->FREEBK;
+            $station->freespots = $feature->properties->FREEBS;
+            $station->state = $feature->properties->STATE;
+            
+            $gpoint->configLambertProjection(150000.013, 5400088.438, 4.3, 90, 49.833333, 51.166666); 
+            $gpoint->setLambert($x, $y);
+            $gpoint->convertLCCtoLL();
+            
+            $station->latitude = $gpoint->lat;
+            $station->longitude = $gpoint->long;
+            
+            if($this->lat != null && $this->long != null) {
+                $station->distance = $gpoint->distanceFrom($this->long, $this->lat);
+            }
+            
+            array_push($result, $station);
+        }
+        
+        function compare($a, $b) {
+            if ($a->distance == $b->distance) {
+                return 0;
+            }
+            return ($a->distance < $b->distance) ? -1 : 1;
+        }
+        
+        usort($result, "compare");
+        
+        return array_slice($result, $this->offset, $this->rowcount);
     }
 
     public static function getDoc(){
