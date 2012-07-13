@@ -74,7 +74,9 @@ class BikesVelo extends AReader{
             return ($a->distance < $b->distance) ? -1 : 1;
         }
         
-        usort($result, "compare");
+        if($this->lat != null && $this->long != null) {
+            usort($result, "compare");
+        }
         
         return array_slice($result, $this->offset, $this->rowcount);
     }
