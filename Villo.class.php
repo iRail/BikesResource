@@ -59,7 +59,7 @@ class BikesVillo extends AReader{
             $station->state = $feature->properties->STATE;
             
             // Configure the gPoint library to use the Lambert Projection for Belgium
-            $gpoint->configLambertProjection(150328, 166262, 4.3, 90, 49.833333, 51.166666); 
+            $gpoint->configLambertProjection(150328, 166262, 4.35, 50.7919, 49.833333, 51.166666); 
             
             $x = $feature->geometry->coordinates[0];
             $y = $feature->geometry->coordinates[1];
