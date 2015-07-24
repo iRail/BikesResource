@@ -1,4 +1,5 @@
 <?php
+
 /* Copyright (C) 2012 by iRail vzw/asbl
  *
  * Author: Maarten Cautreels <maarten at flatturtle.com>
@@ -6,10 +7,9 @@
  *
  */
 
-class Bikes{
-     public static $resources = array (
-	  "Villo", "Velo"
-	  );
+class Bikes
+{
+    public static $resources = array(
+        "Villo", "Velo"
+    );
 }
-
-?>
