@@ -12,8 +12,6 @@ use Irail\BikesResource\gPoint;
  * @author Pieter Colpaert <pieter aŧ iRail.be>
  */
 
-include_once('gPoint.php');
-
 class BikesVillo extends AReader
 {
 
