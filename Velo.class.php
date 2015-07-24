@@ -21,10 +21,12 @@ class BikesVelo extends AReader
 
     public static function getParameters()
     {
-        return array("lat" => "Latitude"
-        , "long" => "Longitude"
-        , "offset" => "Offset"
-        , "rowcount" => "Rowcount");
+        return [
+            "lat"      => "Latitude",
+            "long"     => "Longitude",
+            "offset"   => "Offset",
+            "rowcount" => "Rowcount",
+        ];
     }
 
     public static function getRequiredParameters()
