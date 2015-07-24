@@ -1,5 +1,9 @@
 <?php
 
+namespace Irail\BikesResource;
+
+use Irail\BikesResource\gPoint;
+
 /**
  *
  * @package packages/Bikes
@@ -7,7 +11,10 @@
  * @license AGPLv3
  * @author Pieter Colpaert <pieter aŧ iRail.be>
  */
-class BikesVelo extends AReader
+
+include_once('gPoint.php');
+
+class BikesVillo extends AReader
 {
 
     public function __construct($package, $resource, $RESTparameters)
@@ -49,24 +56,32 @@ class BikesVelo extends AReader
 
     public function read()
     {
-        $data = TDT::HttpRequest("http://ClearChannelBikes:WbRpWHk6Ur@m.velo-antwerpen.be/data/stations.json");
+        $data = TDT::HttpRequest("http://www.mobielbrussel.irisnet.be/villo/json/");
         $decoded = json_decode($data->data);
         //todo: convert to wished format
 
         $result = array();
         $gpoint = new gPoint();
 
-        foreach ($decoded as $sourceStation) {
+        foreach ($decoded->features as $feature) {
             $station = new Object();
 
-            $station->name = $sourceStation->name;
-            $station->freebikes = $sourceStation->bikes;
-            $station->freespots = $sourceStation->slots;
-            $station->state = $sourceStation->status;
-            $station->latitude = $sourceStation->latitude;
-            $station->longitude = $sourceStation->longitude;
+            $station->name = $feature->properties->NAME;
+            $station->freebikes = $feature->properties->FREEBK;
+            $station->freespots = $feature->properties->FREEBS;
+            $station->state = $feature->properties->STATE;
 
-            $gpoint->setLongLat($station->longitude, $station->latitude);
+            // Configure the gPoint library to use the Lambert Projection for Belgium
+            $gpoint->configLambertProjection(150000.013, 5400088.438, 4.367487, 90, 49.833333, 51.166666);
+            $x = $feature->geometry->coordinates[0];
+            $y = $feature->geometry->coordinates[1];
+
+            $gpoint->setLambert($x, $y);
+            // Convert the Lambert Coordinates to Latitude and Longitude (using the gPoint Library)
+            $gpoint->convertLCCtoLL();
+
+            $station->latitude = $gpoint->lat;
+            $station->longitude = $gpoint->long;
 
             if ($this->lat != null && $this->long != null) {
                 $station->distance = $gpoint->distanceFrom($this->long, $this->lat);
@@ -92,6 +107,6 @@ class BikesVelo extends AReader
 
     public static function getDoc()
     {
-        return "This resource contains dynamic information about the availability of bikes in Antwerp";
+        return "This resource contains dynamic information about the availability of bikes in Brussels";
     }
 }

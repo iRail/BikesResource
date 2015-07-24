@@ -1,4 +1,7 @@
 <?php
+
+namespace Irail\BikesResource;
+
 /*------------------------------------------------------------------------------
 ** File:		gPoint.php
 ** Description:	PHP class to convert Latitude & Longitude coordinates into

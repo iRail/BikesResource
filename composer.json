@@ -1,0 +1,14 @@
+{
+    "name": "irail/irail-bikes-resource",
+    "authors": [
+        {
+            "name": "Tjoosten",
+            "email": "Tjoosten3@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4":{
+            "Irail\\BikesResource\\": "src/"
+        }
+    }
+}
