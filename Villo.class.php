@@ -38,11 +38,11 @@ class BikesVillo extends AReader
     {
         if ($key == "lat") {
             $this->lat = $val;
-        } else if ($key == "long") {
+        } elseif ($key == "long") {
             $this->long = $val;
-        } else if ($key == "offset") {
+        } elseif ($key == "offset") {
             $this->offset = $val;
-        } else if ($key == "rowcount") {
+        } elseif ($key == "rowcount") {
             $this->rowcount = $val;
         }
     }
