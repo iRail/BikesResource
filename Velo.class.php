@@ -85,5 +85,3 @@ class BikesVelo extends AReader{
         return "This resource contains dynamic information about the availability of bikes in Antwerp";
     }
 }
-
-?>

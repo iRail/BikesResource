@@ -11,5 +11,3 @@ class Bikes{
 	  "Villo", "Velo"
 	  );
 }
-
-?>

@@ -55,7 +55,7 @@ define ("nm2meter", 1852);
 */
 class gPoint
 {
-/* Reference ellipsoids derived from Peter H. Dana's website- 
+/* Reference ellipsoids derived from Peter H. Dana's website-
 ** http://www.colorado.edu/geography/gcraft/notes/datum/datum_f.html
 ** email: pdana@pdana.com, web page: www.pdana.com
 **
@@ -64,7 +64,7 @@ class gPoint
 ** of Defense World Geodetic System 1984 Technical Report. Part I and II.
 ** Washington, DC: Defense Mapping Agency
 */
-	var $ellipsoid = array(//Ellipsoid name, Equatorial Radius, square of eccentricity	
+	var $ellipsoid = array(//Ellipsoid name, Equatorial Radius, square of eccentricity
 	"Airy"					=>array (6377563, 0.00667054),
 	"Australian National"	=>array	(6378160, 0.006694542),
 	"Bessel 1841"			=>array	(6377397, 0.006674372),
@@ -217,7 +217,7 @@ class gPoint
 			if( $this->lat >= 56.0 && $this->lat < 64.0 && $LongTemp >= 3.0 && $LongTemp < 12.0 ) // Fixed 1.1
 				$ZoneNumber = 32;
 			// Special zones for Svalbard
-			if( $this->lat >= 72.0 && $this->lat < 84.0 ) 
+			if( $this->lat >= 72.0 && $this->lat < 84.0 )
 			{
 				if(      $LongTemp >= 0.0  && $LongTemp <  9.0 ) $ZoneNumber = 31;
 				else if( $LongTemp >= 9.0  && $LongTemp < 21.0 ) $ZoneNumber = 33;
@@ -239,11 +239,11 @@ class gPoint
 		$C = $eccPrimeSquared*cos($LatRad)*cos($LatRad);
 		$A = cos($LatRad)*($LongRad-$LongOriginRad);
 
-		$M = $this->a*((1	- $this->e2/4		- 3*$this->e2*$this->e2/64	- 5*$this->e2*$this->e2*$this->e2/256)*$LatRad 
+		$M = $this->a*((1	- $this->e2/4		- 3*$this->e2*$this->e2/64	- 5*$this->e2*$this->e2*$this->e2/256)*$LatRad
 							- (3*$this->e2/8	+ 3*$this->e2*$this->e2/32	+ 45*$this->e2*$this->e2*$this->e2/1024)*sin(2*$LatRad)
-												+ (15*$this->e2*$this->e2/256 + 45*$this->e2*$this->e2*$this->e2/1024)*sin(4*$LatRad) 
+												+ (15*$this->e2*$this->e2/256 + 45*$this->e2*$this->e2*$this->e2/1024)*sin(4*$LatRad)
 												- (35*$this->e2*$this->e2*$this->e2/3072)*sin(6*$LatRad));
-	
+
 		$this->utmEasting = ($k0*$N*($A+(1-$T+$C)*$A*$A*$A/6
 						+ (5-18*$T+$T*$T+72*$C-58*$eccPrimeSquared)*$A*$A*$A*$A*$A/120)
 						+ $falseEasting);
@@ -260,7 +260,7 @@ class gPoint
 // Brenor Brophy, brenor dot brophy at gmail dot com
 //
 	function UTMLetterDesignator()
-	{	
+	{
 		if((84 >= $this->lat) && ($this->lat >= 72)) $LetterDesignator = 'X';
 		else if((72 > $this->lat) && ($this->lat >= 64)) $LetterDesignator = 'W';
 		else if((64 > $this->lat) && ($this->lat >= 56)) $LetterDesignator = 'V';
@@ -336,7 +336,7 @@ class gPoint
 		$M = $y / $k0;
 		$mu = $M/($this->a*(1-$this->e2/4-3*$this->e2*$this->e2/64-5*$this->e2*$this->e2*$this->e2/256));
 
-		$phi1Rad = $mu	+ (3*$e1/2-27*$e1*$e1*$e1/32)*sin(2*$mu) 
+		$phi1Rad = $mu	+ (3*$e1/2-27*$e1*$e1*$e1/32)*sin(2*$mu)
 					+ (21*$e1*$e1/16-55*$e1*$e1*$e1*$e1/32)*sin(4*$mu)
 					+(151*$e1*$e1*$e1/96)*sin(6*$mu);
 		$phi1 = rad2deg($phi1Rad);
@@ -467,7 +467,7 @@ class gPoint
 		$phi1	= (pi()/2) - 2*atan($t_*pow(((1-$e*sin($phi0))/(1+$e*sin($phi0))),$e/2));
 		$phi2	= (pi()/2) - 2*atan($t_*pow(((1-$e*sin($phi1))/(1+$e*sin($phi1))),$e/2));
 		$phi	= (pi()/2) - 2*atan($t_*pow(((1-$e*sin($phi2))/(1+$e*sin($phi2))),$e/2));
-		
+
 		$this->lat 	= rad2deg($phi);
 		$this->long = rad2deg($lamda);
 	}
@@ -479,10 +479,10 @@ class gPoint
 // Result is returned as meters
 //
 	function distanceFrom($lon1, $lat1)
-	{ 
+	{
 		$lon1 = deg2rad($lon1); $lat1 = deg2rad($lat1); // Added in 1.3
 		$lon2 = deg2rad($this->Long()); $lat2 = deg2rad($this->Lat());
- 
+
 		$theta = $lon2 - $lon1;
 		$dist = acos(sin($lat1) * sin($lat2) + cos($lat1) * cos($lat2) * cos($theta));
 
@@ -496,12 +496,12 @@ class gPoint
 // it just uses Pythagoras's theorm using TM coordinates.
 //
 	function distanceFromTM(&$pt)
-	{ 
+	{
 		$E1 = $pt->E(); 	$N1 = $pt->N();
 		$E2 = $this->E(); 	$N2 = $this->N();
- 
+
 		$dist = sqrt(pow(($E1-$E2),2)+pow(($N1-$N2),2));
-		return $dist; 
+		return $dist;
 	}
 
 //------------------------------------------------------------------------------
@@ -530,5 +530,3 @@ class gPoint
 		$this->setXY((int)$x,(int)$y);			// Save the geo-referenced result.
 	}
 } // end of class gPoint
-
-?>
