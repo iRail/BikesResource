@@ -43,32 +43,34 @@ class BikesVillo extends AReader{
     }
 
     public function read(){
-        $data = TDT::HttpRequest("http://www.mobielbrussel.irisnet.be/villo/json/");
+	    //        $data = TDT::HttpRequest("http://www.mobielbrussel.irisnet.be/villo/json/");
+	$data = TDT::HttpRequest('https://api.jcdecaux.com/vls/v1/stations?apiKey=6d5071ed0d0b3b68462ad73df43fd9e5479b03d6&contract=Bruxelles-Capitale');
         $decoded = json_decode($data->data);
         //todo: convert to wished format
         
         $result = array();
         $gpoint = new gPoint();
         
-        foreach($decoded->features as $feature) {
+        foreach($decoded as $feature) {
             $station = new Object();
             
-            $station->name = $feature->properties->NAME;
-            $station->freebikes = $feature->properties->FREEBK;
-            $station->freespots = $feature->properties->FREEBS;
-            $station->state = $feature->properties->STATE;
+            $station->name = $feature->name;
+            $station->freebikes = $feature->available_bikes;
+            $station->freespots = $feature->available_bike_stands;
+            $station->state = $feature->status;
             
             // Configure the gPoint library to use the Lambert Projection for Belgium
-            $gpoint->configLambertProjection(150000.013, 5400088.438, 4.367487, 90, 49.833333, 51.166666);
-            $x = $feature->geometry->coordinates[0];
-            $y = $feature->geometry->coordinates[1];
+//            $gpoint->configLambertProjection(150328,166262, 4.359216,50.797815, 49.833333, 51.166666); 
+            //$gpoint->configLambertProjection(150000.013, 5400088.438, 4.367487, 90, 49.833333, 51.166666);
+            //$x = $feature->geometry->coordinates[0];
+            //$y = $feature->geometry->coordinates[1];
             
-            $gpoint->setLambert($x, $y);
+            //$gpoint->setLambert($x, $y);
             // Convert the Lambert Coordinates to Latitude and Longitude (using the gPoint Library)
-            $gpoint->convertLCCtoLL();
+            //$gpoint->convertLCCtoLL();
             
-            $station->latitude = $gpoint->lat;
-            $station->longitude = $gpoint->long;
+            $station->latitude = $feature->position->lat;
+            $station->longitude = $feature->position->lng;
             
             if($this->lat != null && $this->long != null) {
                 $station->distance = $gpoint->distanceFrom($this->long, $this->lat);
@@ -95,5 +97,3 @@ class BikesVillo extends AReader{
         return "This resource contains dynamic information about the availability of bikes in Brussels";
     }
 }
-
-?>
