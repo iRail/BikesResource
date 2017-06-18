@@ -41,7 +41,7 @@ class BikesVelo extends AReader{
     }
 
     public function read(){
-        $data = TDT::HttpRequest("http://ClearChannelBikes:WbRpWHk6Ur@m.velo-antwerpen.be/data/stations.json");
+        $data = TDT::HttpRequest("https://www.velo-antwerpen.be/availability_map/getJsonObject");
         $decoded = json_decode($data->data);
         //todo: convert to wished format
         
@@ -55,8 +55,8 @@ class BikesVelo extends AReader{
             $station->freebikes = $sourceStation->bikes;
             $station->freespots = $sourceStation->slots;
             $station->state = $sourceStation->status;
-            $station->latitude = $sourceStation->latitude;
-            $station->longitude = $sourceStation->longitude;
+            $station->latitude = $sourceStation->lat;
+            $station->longitude = $sourceStation->lon;
             
             $gpoint->setLongLat($station->longitude, $station->latitude);
             
